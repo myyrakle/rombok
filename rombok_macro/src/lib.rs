@@ -166,7 +166,6 @@ fn extract_struct_info(item: TokenStream) -> StructInfo {
     let mut iter = item.into_iter();
 
     while let Some(token) = iter.next() {
-        println!("{:?}", token);
         if let TokenTree::Ident(ident) = token {
             if ident.to_string() == "struct" {
                 result.is_struct = true;
