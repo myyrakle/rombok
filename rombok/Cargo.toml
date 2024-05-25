@@ -1,10 +1,10 @@
 [package]
 name = "rombok"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 license = "MIT"
 authors = ["myyrakle <sssang97@naver.com>"] 
-description = "macro for rombok libary"
+description = "boilerplate generation macros like lombok"
 keywords = ["lombok", "getter", "setter", "builder", "java"] 
 readme = "./../README.md"
 repository = "https://github.com/myyrakle/rombok" 
