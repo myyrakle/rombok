@@ -1,4 +1,6 @@
-use proc_macro::{Ident, TokenStream, TokenTree};
+use std::str::FromStr;
+
+use proc_macro::{TokenStream, TokenTree};
 
 #[proc_macro_attribute]
 #[allow(non_snake_case)]
@@ -8,6 +10,27 @@ pub fn Getter(_: TokenStream, mut item: TokenStream) -> TokenStream {
     if !struct_info.is_struct {
         panic!("The #[Getter] attribute can only be used on structs");
     }
+
+    let mut new_code = String::new();
+
+    new_code += &format!("impl {} {{\n", struct_info.struct_name);
+
+    for (field_name, type_name) in struct_info.fields {
+        new_code += &format!("pub fn get_{}(&self) -> &{} {{\n", field_name, type_name);
+        new_code += &format!("&self.{}\n", field_name);
+        new_code += &format!("}}\n");
+
+        new_code += &format!(
+            "pub fn get_{}_mut(&mut self) -> &mut {} {{\n",
+            field_name, type_name
+        );
+        new_code += &format!("&mut self.{}\n", field_name);
+        new_code += &format!("}}\n");
+    }
+
+    new_code += &format!("}}\n");
+
+    item.extend(TokenStream::from_str(&new_code).unwrap());
 
     return item;
 }
