@@ -89,6 +89,66 @@ pub fn With(_: TokenStream, mut item: TokenStream) -> TokenStream {
     return item;
 }
 
+#[proc_macro_attribute]
+#[allow(non_snake_case)]
+pub fn Builder(_: TokenStream, mut item: TokenStream) -> TokenStream {
+    let struct_info = extract_struct_info(item.clone());
+
+    if !struct_info.is_struct {
+        panic!("The #[Builder] attribute can only be used on structs");
+    }
+
+    let mut new_code = String::new();
+
+    new_code += &format!("impl {} {{\n", struct_info.struct_name);
+
+    new_code += &format!(
+        "pub fn builder() -> {}Builder {{\n",
+        struct_info.struct_name
+    );
+    new_code += &format!("{}Builder::default()\n", struct_info.struct_name);
+    new_code += &format!("}}\n");
+
+    new_code += &format!("}}\n");
+
+    new_code += &format!(
+        "#[derive(Debug, Default)] 
+pub struct {}Builder {{\n",
+        struct_info.struct_name
+    );
+
+    for (field_name, type_name) in &struct_info.fields {
+        new_code += &format!("{}: Option<{}>,\n", field_name, type_name);
+    }
+
+    new_code += &format!("}}\n");
+
+    new_code += &format!("impl {}Builder {{\n", struct_info.struct_name);
+
+    for (field_name, type_name) in &struct_info.fields {
+        new_code += &format!("pub fn {field_name}(mut self, value: {type_name}) -> Self {{\n",);
+        new_code += &format!("self.{field_name} = Some(value);\n",);
+        new_code += &format!("self\n");
+        new_code += &format!("}}\n");
+    }
+
+    new_code += &format!("pub fn build(self) -> {} {{\n", struct_info.struct_name);
+    new_code += &format!("{} {{\n", struct_info.struct_name);
+
+    for (field_name, _) in &struct_info.fields {
+        new_code += &format!("{field_name}: self.{field_name}.unwrap(),\n",);
+    }
+
+    new_code += &format!("}}\n");
+    new_code += &format!("}}\n");
+
+    new_code += &format!("}}\n");
+
+    item.extend(TokenStream::from_str(&new_code).unwrap());
+
+    return item;
+}
+
 #[derive(Debug)]
 struct StructInfo {
     struct_name: String,

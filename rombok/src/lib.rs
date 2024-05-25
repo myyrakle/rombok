@@ -82,3 +82,29 @@ fn main() {
 ```
 */
 pub use rombok_macro::With;
+
+/// This is an attribute macro that creates Builder classes and builder methods for the structure.
+///
+/// # Example
+/**
+ * # Example
+```rust
+use rombok::Builder;
+
+#[Builder]
+struct Person {
+    name: String,
+    age: u8,
+}
+
+fn main() {
+    let person = Person::builder()
+        .name("Jane".to_string())
+        .age(31)
+        .build();
+
+    println!("Hello, world!: {}, {}", person.name, person.age);
+}
+```
+*/
+pub use rombok_macro::Builder;
