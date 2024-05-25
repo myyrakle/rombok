@@ -61,6 +61,34 @@ pub fn Setter(_: TokenStream, mut item: TokenStream) -> TokenStream {
     return item;
 }
 
+#[proc_macro_attribute]
+#[allow(non_snake_case)]
+pub fn With(_: TokenStream, mut item: TokenStream) -> TokenStream {
+    let struct_info = extract_struct_info(item.clone());
+
+    if !struct_info.is_struct {
+        panic!("The #[With] attribute can only be used on structs");
+    }
+
+    let mut new_code = String::new();
+
+    new_code += &format!("impl {} {{\n", struct_info.struct_name);
+
+    for (field_name, type_name) in struct_info.fields {
+        new_code +=
+            &format!("pub fn with_{field_name}(mut self, value: {type_name}) -> Self {{\n",);
+        new_code += &format!("self.{field_name} = value;\n",);
+        new_code += &format!("self\n");
+        new_code += &format!("}}\n");
+    }
+
+    new_code += &format!("}}\n");
+
+    item.extend(TokenStream::from_str(&new_code).unwrap());
+
+    return item;
+}
+
 #[derive(Debug)]
 struct StructInfo {
     struct_name: String,
