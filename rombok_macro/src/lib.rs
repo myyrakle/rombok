@@ -2,7 +2,7 @@ use proc_macro::{Ident, TokenStream, TokenTree};
 
 #[proc_macro_attribute]
 #[allow(non_snake_case)]
-pub fn Getter(attr: TokenStream, mut item: TokenStream) -> TokenStream {
+pub fn Getter(_: TokenStream, mut item: TokenStream) -> TokenStream {
     let struct_info = extract_struct_info(item.clone());
 
     if !struct_info.is_struct {
@@ -12,6 +12,7 @@ pub fn Getter(attr: TokenStream, mut item: TokenStream) -> TokenStream {
     return item;
 }
 
+#[derive(Debug)]
 struct StructInfo {
     struct_name: String,
     is_struct: bool,
@@ -48,17 +49,32 @@ fn extract_struct_info(item: TokenStream) -> StructInfo {
 
     while let Some(token) = iter.next() {
         if let TokenTree::Group(group) = token {
-            let mut group_iter = group.stream().into_iter();
+            let mut group_iter = group.stream().into_iter().peekable();
 
             while let Some(token) = group_iter.next() {
                 if let TokenTree::Ident(name) = token {
                     let field_name = name.to_string();
+                    let mut type_name = String::new();
 
                     if let Some(TokenTree::Punct(punct)) = group_iter.next() {
                         if punct.as_char() == ':' {
-                            if let Some(TokenTree::Ident(name)) = group_iter.next() {
-                                let field_type = name.to_string();
-                                result.fields.push((field_name, field_type));
+                            loop {
+                                let peeked = group_iter.peek();
+
+                                match peeked {
+                                    Some(TokenTree::Punct(punct)) if punct.as_char() == ',' => {
+                                        result.fields.push((field_name, type_name));
+                                        break;
+                                    }
+                                    None => {
+                                        result.fields.push((field_name, type_name));
+                                        break;
+                                    }
+                                    Some(anything) => {
+                                        type_name += &anything.to_string();
+                                        group_iter.next();
+                                    }
+                                }
                             }
                         }
                     }

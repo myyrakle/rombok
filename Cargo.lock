@@ -5,12 +5,9 @@ version = 3
 [[package]]
 name = "rombok"
 version = "0.1.0"
-<<<<<<< HEAD
 dependencies = [
  "rombok_macro",
 ]
-=======
->>>>>>> master
 
 [[package]]
 name = "rombok_macro"
