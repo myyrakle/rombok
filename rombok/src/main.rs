@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use rombok::{Getter, Setter};
 
 mod foo {
@@ -18,7 +20,7 @@ struct Person {
 }
 
 fn main() {
-    let mut p = Person {
+    let mut person = Person {
         name: "John".to_string(),
         age: 30,
         money: Some(2500.50),
@@ -26,8 +28,8 @@ fn main() {
         bar: foo::Bar { a: 1, b: 2 },
     };
 
-    p.set_name("Jane".to_string());
-    let foo = p.get_name();
+    person.set_name("Jane".to_string());
+    let foo = person.get_name();
 
     println!("Hello, world!: {foo}");
 }
