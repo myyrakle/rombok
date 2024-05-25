@@ -55,3 +55,30 @@ fn main() {
 ```
 */
 pub use rombok_macro::Setter;
+
+/// This is an attribute macro that adds a `with value` method to the structure.
+///
+/**
+ * # Example
+```rust
+use rombok::With;
+
+#[With]
+struct Person {
+    name: String,
+    age: u8,
+}
+
+fn main() {
+    let person = Person {
+        name: "".to_string(),
+        age: 0,
+    }.with_name("Jane".to_string()).with_age(31);
+
+    let person = person.with_name("tom".to_string()).with_age(44);
+
+    println!("Hello, world!: {}, {}", person.name, person.age);
+}
+```
+*/
+pub use rombok_macro::With;
