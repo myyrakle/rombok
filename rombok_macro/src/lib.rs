@@ -111,7 +111,11 @@ pub fn Builder(_: TokenStream, mut item: TokenStream) -> TokenStream {
 
     new_code += &format!("}}\n");
 
-    new_code += &format!("pub struct {}Builder {{\n", struct_info.struct_name);
+    new_code += &format!(
+        "#[derive(Debug, Default)] 
+pub struct {}Builder {{\n",
+        struct_info.struct_name
+    );
 
     for (field_name, type_name) in &struct_info.fields {
         new_code += &format!("{}: Option<{}>,\n", field_name, type_name);
