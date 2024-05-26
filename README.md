@@ -1,6 +1,6 @@
 # rombok
 
-![](https://img.shields.io/badge/language-Rust-red) ![](https://img.shields.io/badge/version-0.1.2-brightgreen) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/myyrakle/rombok/blob/master/LICENSE)
+![](https://img.shields.io/badge/language-Rust-red) ![](https://img.shields.io/badge/version-0.2.0-brightgreen) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/myyrakle/rombok/blob/master/LICENSE)
 
 boilerplate generation macros like lombok.
 
@@ -34,7 +34,7 @@ fn main() {
 
 ## Setter 
 
-The Setter macro generates a set_{fieldname} method for each field in the structure.
+The Setter macro generates a `set_{fieldname}` method for each field in the structure.
 ```rust
 use rombok::Setter;
 
@@ -59,7 +59,7 @@ fn main() {
 
 ## With 
 
-With macro generates a with_{fieldname} method for each field in the structure.
+With macro generates a `with_{fieldname}` method for each field in the structure.
 Unlike Setter, it modifies the value through move and returns the changed object as the return value.
 ```rust
 use rombok::With;
