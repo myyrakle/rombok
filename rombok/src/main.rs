@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use rombok::{Getter, Setter};
+use rombok::AllArgsConstructor;
 
 mod foo {
     pub struct Bar {
@@ -9,8 +9,7 @@ mod foo {
     }
 }
 
-#[Getter]
-#[Setter]
+#[AllArgsConstructor]
 struct Person {
     name: String,
     age: u8,
@@ -20,16 +19,15 @@ struct Person {
 }
 
 fn main() {
-    let mut person = Person {
-        name: "John".to_string(),
-        age: 30,
-        money: Some(2500.50),
-        point: (10, 20),
-        bar: foo::Bar { a: 1, b: 2 },
-    };
+    let person = Person::with_all_args(
+        "John".to_string(),
+        30,
+        Some(100.0),
+        (10, 20),
+        foo::Bar { a: 1, b: 2 },
+    );
 
-    person.set_name("Jane".to_string());
-    let foo = person.get_name();
+    let name = person.name;
 
-    println!("Hello, world!: {foo}");
+    println!("Hello, world!: {name}");
 }
