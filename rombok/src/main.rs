@@ -1,6 +1,6 @@
-#![allow(dead_code)]
+#![allow(dead_code, unused_imports)]
 
-use rombok::{Getter, Setter};
+use rombok::{AllArgsConstructor, NoArgsConstructor};
 
 mod foo {
     pub struct Bar {
@@ -9,27 +9,17 @@ mod foo {
     }
 }
 
-#[Getter]
-#[Setter]
+#[NoArgsConstructor]
 struct Person {
     name: String,
     age: u8,
     money: Option<f64>,
-    point: (u8, u8),
-    bar: foo::Bar,
 }
 
 fn main() {
-    let mut person = Person {
-        name: "John".to_string(),
-        age: 30,
-        money: Some(2500.50),
-        point: (10, 20),
-        bar: foo::Bar { a: 1, b: 2 },
-    };
+    let person = Person::with_no_args();
 
-    person.set_name("Jane".to_string());
-    let foo = person.get_name();
+    let money = person.money;
 
-    println!("Hello, world!: {foo}");
+    println!("Hello, world!: {money:?}");
 }

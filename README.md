@@ -1,6 +1,6 @@
 # rombok
 
-![](https://img.shields.io/badge/language-Rust-red) ![](https://img.shields.io/badge/version-0.1.2-brightgreen) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/myyrakle/rombok/blob/master/LICENSE)
+![](https://img.shields.io/badge/language-Rust-red) ![](https://img.shields.io/badge/version-0.2.0-brightgreen) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/myyrakle/rombok/blob/master/LICENSE)
 
 boilerplate generation macros like lombok.
 
@@ -34,7 +34,7 @@ fn main() {
 
 ## Setter 
 
-The Setter macro generates a set_{fieldname} method for each field in the structure.
+The Setter macro generates a `set_{fieldname}` method for each field in the structure.
 ```rust
 use rombok::Setter;
 
@@ -59,7 +59,7 @@ fn main() {
 
 ## With 
 
-With macro generates a with_{fieldname} method for each field in the structure.
+With macro generates a `with_{fieldname}` method for each field in the structure.
 Unlike Setter, it modifies the value through move and returns the changed object as the return value.
 ```rust
 use rombok::With;
@@ -102,5 +102,58 @@ fn main() {
         .build();
 
     println!("Hello, world!: {}, {}", person.name, person.age);
+}
+```
+
+## AllArgsConstructor
+
+This is an attribute macro that creates a constructor that initializes all fields of the structure.
+
+```rust
+use rombok::AllArgsConstructor;
+
+#[AllArgsConstructor]
+struct Person {
+    name: String,
+    age: u8,
+    money: Option<f64>,
+    point: (u8, u8),
+}
+
+fn main() {
+    let person = Person::with_all_args(
+        "John".to_string(),
+        30,
+        Some(100.0),
+        (10, 20),
+    );
+
+    let name = person.name;
+
+    println!("Hello, world!: {name}");
+}
+```
+
+## NoArgsConstructor
+
+This is an attribute macro that creates a constructor method that does not receive arguments and initializes all fields to default.
+The type of each field must implement the Default trait.
+
+```rust
+use rombok::NoArgsConstructor;
+
+#[NoArgsConstructor]
+struct Person {
+    name: String,
+    age: u8,
+    money: Option<f64>,
+}
+
+fn main() {
+    let person = Person::with_no_args();
+
+    let money = person.money;
+
+    println!("Hello, world!: {money:?}");
 }
 ```
