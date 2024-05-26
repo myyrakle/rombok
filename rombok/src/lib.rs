@@ -108,3 +108,5 @@ fn main() {
 ```
 */
 pub use rombok_macro::Builder;
+
+pub use rombok_macro::AllArgsConstructor;
