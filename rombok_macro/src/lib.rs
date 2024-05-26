@@ -187,6 +187,36 @@ pub fn AllArgsConstructor(_: TokenStream, mut item: TokenStream) -> TokenStream 
     return item;
 }
 
+#[proc_macro_attribute]
+#[allow(non_snake_case)]
+pub fn NoArgsConstructor(_: TokenStream, mut item: TokenStream) -> TokenStream {
+    let struct_info = extract_struct_info(item.clone());
+
+    if !struct_info.is_struct {
+        panic!("The #[NoArgsConstructor] attribute can only be used on structs");
+    }
+
+    let mut new_code = String::new();
+
+    new_code += &format!("impl {} {{\n", struct_info.struct_name);
+
+    new_code += &format!("  pub fn with_no_args() -> Self {{\n");
+    new_code += &format!("      Self {{\n");
+
+    for (field_name, _) in &struct_info.fields {
+        new_code += &format!("      {field_name}: Default::default(),\n",);
+    }
+
+    new_code += &format!("      }}\n");
+    new_code += &format!("  }}\n");
+
+    new_code += &format!("}}\n");
+
+    item.extend(TokenStream::from_str(&new_code).unwrap());
+
+    return item;
+}
+
 #[derive(Debug)]
 struct StructInfo {
     struct_name: String,
