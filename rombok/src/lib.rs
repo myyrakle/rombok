@@ -140,4 +140,27 @@ fn main() {
  */
 pub use rombok_macro::AllArgsConstructor;
 
+/// This is an attribute macro that creates a constructor method that does not receive arguments and initializes all fields to default.
+///
+/// # Example
+/**
+```rust
+use rombok::NoArgsConstructor;
+
+#[NoArgsConstructor]
+struct Person {
+    name: String,
+    age: u8,
+    money: Option<f64>,
+}
+
+fn main() {
+    let person = Person::with_no_args();
+
+    let money = person.money;
+
+    println!("Hello, world!: {money:?}");
+}
+```
+ */
 pub use rombok_macro::NoArgsConstructor;
