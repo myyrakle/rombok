@@ -139,3 +139,5 @@ fn main() {
 ```
  */
 pub use rombok_macro::AllArgsConstructor;
+
+pub use rombok_macro::NoArgsConstructor;

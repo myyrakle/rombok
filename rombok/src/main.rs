@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use rombok::AllArgsConstructor;
+use rombok::{AllArgsConstructor, NoArgsConstructor};
 
 mod foo {
     pub struct Bar {
@@ -9,25 +9,17 @@ mod foo {
     }
 }
 
-#[AllArgsConstructor]
+#[NoArgsConstructor]
 struct Person {
     name: String,
     age: u8,
     money: Option<f64>,
-    point: (u8, u8),
-    bar: foo::Bar,
 }
 
 fn main() {
-    let person = Person::with_all_args(
-        "John".to_string(),
-        30,
-        Some(100.0),
-        (10, 20),
-        foo::Bar { a: 1, b: 2 },
-    );
+    let person = Person::with_no_args();
 
-    let name = person.name;
+    let money = person.money;
 
-    println!("Hello, world!: {name}");
+    println!("Hello, world!: {money:?}");
 }
