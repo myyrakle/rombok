@@ -104,3 +104,56 @@ fn main() {
     println!("Hello, world!: {}, {}", person.name, person.age);
 }
 ```
+
+## AllArgsConstructor
+
+This is an attribute macro that creates a constructor that initializes all fields of the structure.
+
+```rust
+use rombok::AllArgsConstructor;
+
+#[AllArgsConstructor]
+struct Person {
+    name: String,
+    age: u8,
+    money: Option<f64>,
+    point: (u8, u8),
+}
+
+fn main() {
+    let person = Person::with_all_args(
+        "John".to_string(),
+        30,
+        Some(100.0),
+        (10, 20),
+    );
+
+    let name = person.name;
+
+    println!("Hello, world!: {name}");
+}
+```
+
+## NoArgsConstructor
+
+This is an attribute macro that creates a constructor method that does not receive arguments and initializes all fields to default.
+The type of each field must implement the Default trait.
+
+```rust
+use rombok::NoArgsConstructor;
+
+#[NoArgsConstructor]
+struct Person {
+    name: String,
+    age: u8,
+    money: Option<f64>,
+}
+
+fn main() {
+    let person = Person::with_no_args();
+
+    let money = person.money;
+
+    println!("Hello, world!: {money:?}");
+}
+```
