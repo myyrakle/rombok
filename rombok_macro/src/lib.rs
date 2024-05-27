@@ -136,7 +136,7 @@ pub struct {}Builder {{\n",
     new_code += &format!("{} {{\n", struct_info.struct_name);
 
     for (field_name, _) in &struct_info.fields {
-        new_code += &format!("{field_name}: self.{field_name}.unwrap(),\n",);
+        new_code += &format!("{field_name}: self.{field_name}.unwrap_or_default(),\n",);
     }
 
     new_code += &format!("}}\n");
