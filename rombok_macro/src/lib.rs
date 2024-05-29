@@ -272,6 +272,17 @@ pub fn ToString(_: TokenStream, item: TokenStream) -> TokenStream {
     result
 }
 
+#[proc_macro_attribute]
+#[allow(non_snake_case)]
+pub fn Value(stream: TokenStream, item: TokenStream) -> TokenStream {
+    let result = ToString(stream.clone(), item);
+    let result = EqualsAndHashcode(stream.clone(), result);
+    let result = Getter(stream.clone(), result);
+    let result = AllArgsConstructor(stream, result);
+
+    result
+}
+
 #[derive(Debug)]
 struct StructInfo {
     struct_name: String,
