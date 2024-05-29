@@ -9,7 +9,9 @@ mod foo {
     }
 }
 
-#[NoArgsConstructor]
+use std::hash::{DefaultHasher, Hash, Hasher};
+
+#[derive(Debug)]
 #[EqualsAndHashcode]
 struct Person {
     name: String,
@@ -17,9 +19,20 @@ struct Person {
 }
 
 fn main() {
-    let person = Person::with_no_args();
+    let person = Person {
+        name: "John".to_string(),
+        age: 30,
+    };
 
-    let age = person.age;
+    let person2 = Person {
+        name: "Jane".to_string(),
+        age: 30,
+    };
 
-    println!("Hello, world!: {age:?}");
+    let mut hasher = DefaultHasher::new();
+    person.hash(&mut hasher);
+    let hashcode = hasher.finish();
+    println!("hashcode: {:?}", hashcode);
+
+    assert_ne!(person, person2);
 }
