@@ -239,6 +239,47 @@ pub fn EqualsAndHashcode(_: TokenStream, item: TokenStream) -> TokenStream {
     result
 }
 
+#[proc_macro_attribute]
+#[allow(non_snake_case)]
+pub fn ToString(_: TokenStream, mut item: TokenStream) -> TokenStream {
+    let struct_info = extract_struct_info(item.clone());
+
+    if !struct_info.is_struct {
+        panic!("The #[ToString] attribute can only be used on structs");
+    }
+
+    let mut new_code = String::new();
+
+    new_code += &format!(
+        "impl std::fmt::Display for {} {{\n",
+        struct_info.struct_name
+    );
+
+    new_code += &format!("fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {{\n");
+
+    new_code += &format!("write!(f, \"{} {{", struct_info.struct_name);
+
+    for (field_name, _) in &struct_info.fields {
+        new_code += &format!(" {}: {{}},", field_name);
+    }
+
+    new_code += &format!("}}\"");
+
+    for (field_name, _) in &struct_info.fields {
+        new_code += &format!(", self.{}", field_name);
+    }
+
+    new_code += &format!(")\n");
+
+    new_code += &format!("}}\n");
+
+    new_code += &format!("}}\n");
+
+    item.extend(TokenStream::from_str(&new_code).unwrap());
+
+    return item;
+}
+
 #[derive(Debug)]
 struct StructInfo {
     struct_name: String,
