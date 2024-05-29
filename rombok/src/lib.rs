@@ -202,3 +202,5 @@ fn main() {
 ```
  */
 pub use rombok_macro::EqualsAndHashcode;
+
+pub use rombok_macro::ToString;
