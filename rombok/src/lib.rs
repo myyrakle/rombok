@@ -227,3 +227,5 @@ fn main() {
 ```
  */
 pub use rombok_macro::ToString;
+
+pub use rombok_macro::Value;
