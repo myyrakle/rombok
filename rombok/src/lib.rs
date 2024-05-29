@@ -227,3 +227,30 @@ fn main() {
 ```
  */
 pub use rombok_macro::ToString;
+
+/// This macro is a boilerplate combination of the following macros:: ToString + EqualsAndHashcode + Getter + AllArgsConstructor
+///
+/// # Example
+/**
+```rust
+use rombok::Value;
+
+#[Value]
+struct Person {
+    name: String,
+    age: u8,
+}
+
+fn main() {
+    let person = Person::with_all_args("John".to_string(), 30);
+
+    println!("age: {}", person.get_age());
+
+    let person2 = Person::with_all_args("Jane".to_string(), 30);
+    assert_ne!(person, person2);
+
+    println!("person: {}", person.to_string());
+}
+```
+ */
+pub use rombok_macro::Value;
