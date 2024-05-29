@@ -165,7 +165,7 @@ fn main() {
  */
 pub use rombok_macro::NoArgsConstructor;
 
-/// This is an attribute macro that generates the `equals` and `hashcode` methods for the structure. (Eq, Hash trait
+/// This is an attribute macro that generates the `equals` and `hashcode` methods for the structure. (Eq, Hash trait)
 ///
 /// # Example
 /**

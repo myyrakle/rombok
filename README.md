@@ -157,3 +157,87 @@ fn main() {
     println!("Hello, world!: {money:?}");
 }
 ```
+
+## EqualsAndHashcode
+
+This is an attribute macro that generates the `equals` and `hashcode` methods for the structure. (Eq, Hash trait)
+
+```rust
+use rombok::EqualsAndHashcode;
+
+use std::hash::{DefaultHasher, Hash, Hasher};
+
+#[derive(Debug)]
+#[EqualsAndHashcode]
+struct Person {
+    name: String,
+    age: u8,
+}
+
+fn main() {
+    let person = Person {
+        name: "John".to_string(),
+        age: 30,
+    };
+
+    let person2 = Person {
+        name: "Jane".to_string(),
+        age: 30,
+    };
+
+    let mut hasher = DefaultHasher::new();
+    person.hash(&mut hasher);
+    let hashcode = hasher.finish();
+    println!("hashcode: {:?}", hashcode);
+
+    assert_ne!(person, person2);
+}
+```
+
+## ToString
+
+This is an attribute macro that generates the `to_string` method for the structure. (Display, ToString, Debug trait)
+
+```rust
+use rombok::ToString;
+
+#[ToString]
+struct Person {
+    name: String,
+    age: u8,
+}
+
+fn main() {
+    let person = Person {
+        name: "John".to_string(),
+        age: 30,
+    };
+
+    println!("to_string: {}", person.to_string());
+}
+```
+
+## Value
+
+This macro is a boilerplate combination of the following macros:: ToString + EqualsAndHashcode + Getter + AllArgsConstructor
+
+```rust
+use rombok::Value;
+
+#[Value]
+struct Person {
+    name: String,
+    age: u8,
+}
+
+fn main() {
+    let person = Person::with_all_args("John".to_string(), 30);
+
+    println!("age: {}", person.get_age());
+
+    let person2 = Person::with_all_args("Jane".to_string(), 30);
+    assert_ne!(person, person2);
+
+    println!("person: {}", person.to_string());
+}
+```
