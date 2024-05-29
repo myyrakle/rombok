@@ -350,6 +350,8 @@ fn extract_struct_info(item: TokenStream) -> StructInfo {
                     }
                 }
             }
+
+            break;
         }
     }
 
