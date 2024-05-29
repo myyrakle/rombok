@@ -217,6 +217,28 @@ pub fn NoArgsConstructor(_: TokenStream, mut item: TokenStream) -> TokenStream {
     return item;
 }
 
+#[proc_macro_attribute]
+#[allow(non_snake_case)]
+pub fn EqualsAndHashcode(_: TokenStream, item: TokenStream) -> TokenStream {
+    let struct_info = extract_struct_info(item.clone());
+
+    if !struct_info.is_struct {
+        panic!("The #[EqualsAndHashcode] attribute can only be used on structs");
+    }
+
+    let before_code = format!("#[derive(PartialEq, Hash)]\n");
+
+    let after_code = format!("impl Eq for {} {{}}\n", struct_info.struct_name);
+
+    let mut result = TokenStream::from_str(&before_code).unwrap();
+
+    result.extend(item);
+
+    result.extend(TokenStream::from_str(&after_code).unwrap());
+
+    result
+}
+
 #[derive(Debug)]
 struct StructInfo {
     struct_name: String,

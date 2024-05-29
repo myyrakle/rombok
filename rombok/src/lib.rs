@@ -164,3 +164,41 @@ fn main() {
 ```
  */
 pub use rombok_macro::NoArgsConstructor;
+
+/// This is an attribute macro that generates the `equals` and `hashcode` methods for the structure. (Eq, Hash trait
+///
+/// # Example
+/**
+```rust
+use rombok::EqualsAndHashcode;
+
+use std::hash::{DefaultHasher, Hash, Hasher};
+
+#[derive(Debug)]
+#[EqualsAndHashcode]
+struct Person {
+    name: String,
+    age: u8,
+}
+
+fn main() {
+    let person = Person {
+        name: "John".to_string(),
+        age: 30,
+    };
+
+    let person2 = Person {
+        name: "Jane".to_string(),
+        age: 30,
+    };
+
+    let mut hasher = DefaultHasher::new();
+    person.hash(&mut hasher);
+    let hashcode = hasher.finish();
+    println!("hashcode: {:?}", hashcode);
+
+    assert_ne!(person, person2);
+}
+```
+ */
+pub use rombok_macro::EqualsAndHashcode;
