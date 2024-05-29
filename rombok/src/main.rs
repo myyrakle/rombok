@@ -1,6 +1,6 @@
 #![allow(dead_code, unused_imports)]
 
-use rombok::{AllArgsConstructor, EqualsAndHashcode, NoArgsConstructor};
+use rombok::{AllArgsConstructor, EqualsAndHashcode, NoArgsConstructor, ToString};
 
 mod foo {
     pub struct Bar {
@@ -11,8 +11,7 @@ mod foo {
 
 use std::hash::{DefaultHasher, Hash, Hasher};
 
-#[derive(Debug)]
-#[EqualsAndHashcode]
+#[ToString]
 struct Person {
     name: String,
     age: u8,
@@ -24,15 +23,5 @@ fn main() {
         age: 30,
     };
 
-    let person2 = Person {
-        name: "Jane".to_string(),
-        age: 30,
-    };
-
-    let mut hasher = DefaultHasher::new();
-    person.hash(&mut hasher);
-    let hashcode = hasher.finish();
-    println!("hashcode: {:?}", hashcode);
-
-    assert_ne!(person, person2);
+    println!("to_string: {}", person.to_string());
 }

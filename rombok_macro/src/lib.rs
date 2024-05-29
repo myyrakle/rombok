@@ -241,43 +241,35 @@ pub fn EqualsAndHashcode(_: TokenStream, item: TokenStream) -> TokenStream {
 
 #[proc_macro_attribute]
 #[allow(non_snake_case)]
-pub fn ToString(_: TokenStream, mut item: TokenStream) -> TokenStream {
+pub fn ToString(_: TokenStream, item: TokenStream) -> TokenStream {
     let struct_info = extract_struct_info(item.clone());
 
     if !struct_info.is_struct {
         panic!("The #[ToString] attribute can only be used on structs");
     }
 
-    let mut new_code = String::new();
+    let before_code = format!("#[derive(Debug)]\n");
 
-    new_code += &format!(
+    let mut result = TokenStream::from_str(&before_code).unwrap();
+
+    result.extend(item);
+
+    let mut after_code = String::new();
+
+    // impl display
+    after_code += &format!(
         "impl std::fmt::Display for {} {{\n",
         struct_info.struct_name
     );
+    after_code +=
+        &format!("fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {{\n");
+    after_code += &format!("write!(f, \"{{self:?}}\")");
+    after_code += &format!("}}\n");
+    after_code += &format!("}}\n");
 
-    new_code += &format!("fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {{\n");
+    result.extend(TokenStream::from_str(&after_code).unwrap());
 
-    new_code += &format!("write!(f, \"{} {{", struct_info.struct_name);
-
-    for (field_name, _) in &struct_info.fields {
-        new_code += &format!(" {}: {{}},", field_name);
-    }
-
-    new_code += &format!("}}\"");
-
-    for (field_name, _) in &struct_info.fields {
-        new_code += &format!(", self.{}", field_name);
-    }
-
-    new_code += &format!(")\n");
-
-    new_code += &format!("}}\n");
-
-    new_code += &format!("}}\n");
-
-    item.extend(TokenStream::from_str(&new_code).unwrap());
-
-    return item;
+    result
 }
 
 #[derive(Debug)]

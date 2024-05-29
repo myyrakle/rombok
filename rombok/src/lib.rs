@@ -203,4 +203,27 @@ fn main() {
  */
 pub use rombok_macro::EqualsAndHashcode;
 
+/// This is an attribute macro that generates the `to_string` method for the structure. (Display, ToString, Debug trait)
+///
+/// # Example
+/**
+```rust
+use rombok::ToString;
+
+#[ToString]
+struct Person {
+    name: String,
+    age: u8,
+}
+
+fn main() {
+    let person = Person {
+        name: "John".to_string(),
+        age: 30,
+    };
+
+    println!("to_string: {}", person.to_string());
+}
+```
+ */
 pub use rombok_macro::ToString;
