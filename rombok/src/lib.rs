@@ -164,3 +164,5 @@ fn main() {
 ```
  */
 pub use rombok_macro::NoArgsConstructor;
+
+pub use rombok_macro::EqualsAndHashcode;

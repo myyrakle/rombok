@@ -1,6 +1,6 @@
 #![allow(dead_code, unused_imports)]
 
-use rombok::{AllArgsConstructor, NoArgsConstructor};
+use rombok::{AllArgsConstructor, EqualsAndHashcode, NoArgsConstructor};
 
 mod foo {
     pub struct Bar {
@@ -10,16 +10,16 @@ mod foo {
 }
 
 #[NoArgsConstructor]
+#[EqualsAndHashcode]
 struct Person {
     name: String,
     age: u8,
-    money: Option<f64>,
 }
 
 fn main() {
     let person = Person::with_no_args();
 
-    let money = person.money;
+    let age = person.age;
 
-    println!("Hello, world!: {money:?}");
+    println!("Hello, world!: {age:?}");
 }

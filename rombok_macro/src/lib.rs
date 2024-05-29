@@ -219,34 +219,24 @@ pub fn NoArgsConstructor(_: TokenStream, mut item: TokenStream) -> TokenStream {
 
 #[proc_macro_attribute]
 #[allow(non_snake_case)]
-pub fn EqualsAndHashcode(_: TokenStream, mut item: TokenStream) -> TokenStream {
+pub fn EqualsAndHashcode(_: TokenStream, item: TokenStream) -> TokenStream {
     let struct_info = extract_struct_info(item.clone());
 
     if !struct_info.is_struct {
         panic!("The #[EqualsAndHashcode] attribute can only be used on structs");
     }
 
-    let mut new_code = String::new();
+    let before_code = format!("#[derive(PartialEq, Hash)]\n");
 
-    new_code += &format!("impl PartialEq for {} {{\n", struct_info.struct_name);
-    new_code += &format!("  fn eq(&self, other: &Self) -> bool {{\n");
-    new_code += &format!("      true\n");
-    new_code += &format!("  }}\n");
-    new_code += &format!("}}\n");
+    let after_code = format!("impl Eq for {} {{}}\n", struct_info.struct_name);
 
-    new_code += &format!("impl Eq for {} {{}}\n", struct_info.struct_name);
+    let mut result = TokenStream::from_str(&before_code).unwrap();
 
-    new_code += &format!("impl Eq for {} {{}}\n", struct_info.struct_name);
+    result.extend(item);
 
-    new_code += &format!("impl std::hash::Hash for {} {{\n", struct_info.struct_name);
-    new_code += &format!("  fn hash<H: std::hash::Hasher>(&self, state: &mut H) {{\n");
-    new_code += &format!("      self.0.hash(state);\n");
-    new_code += &format!("  }}\n");
-    new_code += &format!("}}\n");
+    result.extend(TokenStream::from_str(&after_code).unwrap());
 
-    item.extend(TokenStream::from_str(&new_code).unwrap());
-
-    return item;
+    result
 }
 
 #[derive(Debug)]
